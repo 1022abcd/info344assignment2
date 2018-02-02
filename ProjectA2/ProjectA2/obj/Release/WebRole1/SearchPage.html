@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wiki Search</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        function searchRequest() {
+            $("#result").empty();
+            $.ajax({
+                type: "POST",
+                url: "http://achocloudservice.cloudapp.net/PA2.asmx/SearchTrie",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    word: $("#query").val().trim(),
+                }),
+                dataType: "json",
+                success: function (data) {
+                    console.log(data.d);
+                    var test = JSON.parse(data.d);
+                    for (i = 0; i < test.length; i++) {
+                        var div = document.createElement("div");
+                        div.innerHTML = test[i];
+                        $("#result").append(div);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("error " + XMLHttpRequest + " " + errorThrown);
+                    console.log(XMLHttpRequest)
+                }
+            });
+            console.log("end");
+        };
+    </script>
+</head>
+<body>
+    <div class="jumbotron"> 
+        <div class="container">
+            <h1>Wikipedia Title Search</h1>
+        </div>
+    </div>
+    <div class="container">
+        <input class="form-control" type="text" id="query" onkeyup="searchRequest()" />
+        <div id="result"></div>
+    </div>
+</body>
+</html>
+
